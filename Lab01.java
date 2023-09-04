@@ -10,6 +10,8 @@ public class Lab01 {
         int seqLength = 3;
         String seq = "";
         int countAAA = 0;
+        float expFrequency = (float) (Math.pow(.25, 3) * 1000);
+
         // Hashmap used to connect random number selection with DNA Bases
         Map<Integer, String> baseSelect = new HashMap<>();
         baseSelect.put(0, "A");
@@ -26,7 +28,7 @@ public class Lab01 {
             }   
             if(seq.equals("AAA"))
                 countAAA++;
-            System.out.println(seq);
+            // System.out.println(seq);
             seq = "";
         }
         /** 
@@ -36,10 +38,12 @@ public class Lab01 {
          * This outcome suggests the randomizer to be selecting letters with equal weights.
         */
         System.out.println(countAAA);
+        System.out.println("The expected frequency is: " + expFrequency);
     
         // Use the same logic but add in weighted probabilites for GC rich organisms
         int weightedCountAAA = 0;
         int num = 0;
+        float expFrequencyWeighted = (float) (Math.pow(.12, 3) * 1000);
 
         for (int cap = 0; cap < 1000; cap++) 
         {
@@ -62,13 +66,20 @@ public class Lab01 {
             if (seq.equals("AAA")) {
                 weightedCountAAA++;
             }
-            System.out.println(seq);
+            // System.out.println(seq);
             seq = "";
         }
 
         System.out.println(weightedCountAAA);
+        System.out.println("The expected frequency including the weighted probability is: " + expFrequencyWeighted);
 
-        // Discuss results
+        /** 
+         * After running the code several times the resulting number of "AAA" threemers found consistently 
+         * fall within a plausible range from the expected frequency.
+         * GPT's code offered similar results. To compare them I extracted a sample of the 1000 threemers 
+         * from each program and used a Chi-squared test to see if the distributions of randomly generated
+         * sequences were roughly equal.
+        */ 
 
     }
 }
