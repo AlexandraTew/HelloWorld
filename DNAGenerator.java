@@ -39,7 +39,7 @@ public class DNAGenerator {
             }
 
             // Print the generated DNA sequence
-            System.out.println(dnaSequence.toString());
+            // System.out.println(dnaSequence.toString());
         }
 
         // Calculate the expected frequency of "AAA" for uniform distribution
@@ -81,7 +81,7 @@ public class DNAGenerator {
             }
 
             // Print the generated DNA sequence
-            System.out.println(dnaSequence.toString());
+            // System.out.println(dnaSequence.toString());
         }
 
         // Calculate the expected frequency of "AAA" with modified probabilities

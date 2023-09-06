@@ -31,7 +31,7 @@ public class Lab01 {
             // System.out.println(seq);
             seq = "";
         }
-        /** 
+        /*
          * With 64 possible combinations being run at random with equal probability, 
          * we would expect to see approximately 15 of each 3 letter variety in a set of 1000 sequences.
          * Each time I ran this code the output was a number between 5 and 25 which is within a 10 instances from 15.
@@ -73,12 +73,16 @@ public class Lab01 {
         System.out.println(weightedCountAAA);
         System.out.println("The expected frequency including the weighted probability is: " + expFrequencyWeighted);
 
-        /** 
+        /*
          * After running the code several times the resulting number of "AAA" threemers found consistently 
          * fall within a plausible range from the expected frequency.
-         * GPT's code offered similar results. To compare them I extracted a sample of the 1000 threemers 
-         * from each program and used a Chi-squared test to see if the distributions of randomly generated
-         * sequences were roughly equal.
+         * GPT's code offered similar results, this code is in file: DNAGenerator.java
+         * To compare them I ran each of the the code blocks 10 times and averaged each of their output counts. 
+         * My code's average: unweighted:  15.5, weighted: 1.4
+         * GPT's code's averages: unweighted: 15.6, weighted: 2.1
+         * At a glance the average of what each code is outputting is close to the expected average at each stage 
+         * and are also outputting similar results. It looks as though, even with no corrections, the code that 
+         * ChatGPT outputted is doing what we instructed it do! 
         */ 
 
     }
