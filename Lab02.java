@@ -27,7 +27,7 @@ public class Lab02 {
                 System.out.println("That's correct!\n");
                 score++;
             } else {
-                System.out.println("Incorrect! The one letter code for " + aminoAcid + " is " + letterCode[randomIndex] + "\n");
+                System.out.println("That's incorrect! The one letter code for " + aminoAcid + " is " + letterCode[randomIndex] + "\n");
                 break;
             }
         }
@@ -40,3 +40,12 @@ public class Lab02 {
         return random.nextInt(aminoAcids.length);
     }
 }
+
+/*
+ * Discussion: I ran out of time before being able to dig into the extra credit tasks but just looking at my code 
+ * vs ChatGPT's (AminoAcidQuiz.java), it looks like chatGPT actually over-complicated both the code and the underlying logic
+ * and employs a constant countdown method that is very distracting when taking the quiz. It did, however meet all
+ * specifications for the assignment as far as I can tell although I also can't say that I understand everything that its doing. 
+ * The benefit that this countdown has over my code is that it immediately ends the quiz at the 30 second mark instead of 
+ * checking for time after each new response. 
+ */
