@@ -1,14 +1,3 @@
-/* 	
-    Instructions for the Quiz:
-    -It is 30 seconds long.
-	-The quiz ends after 30 seconds or when there is a single incorrect answer.
-	-The program displays the full name of an amino acid (like “alanine” ) 
-		and asks the user to type in the one character code (like a)
-	-The quiz ignores case in the answer.
-	-The program displays the amino acids in random order, can repeat amino
-	     acids and can show more than 20 if the user gets that many correct.
-	-The total score is the number of correct answers…
- */
 import java.util.Random;
 import java.util.Scanner;
 import java.time.Instant;
