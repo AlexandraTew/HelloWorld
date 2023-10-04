@@ -35,7 +35,8 @@ public class FastaSequence
         int gcCount = 0;
         for (char base : sequence.toString().toCharArray()) 
         {
-            if (base == 'G' || base == 'C') {
+            if (base == 'G' || base == 'C') 
+            {
                 gcCount++;
             }
         }
@@ -52,7 +53,8 @@ public class FastaSequence
         {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.startsWith(">")) {
+                if (line.startsWith(">")) 
+                {
                     if (localHeader != null && localFasta != null) 
                     {
                         fastaList.add(localFasta);
