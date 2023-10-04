@@ -142,9 +142,9 @@ Extra Credit:
  * The GPT Code for this assignment is structured similarly to mine given the specificity of the instructions. 
  * There are however lots of distinctions as well such as in excpetion handling and java utilies that
  * are utilized in each case. In spite of GPT using a larger breadth of utilities and distilling code down into 
- * simpler syntax than I am yet able to, I was still able to break it fairly easily and would have had to spend
- * time adjusting my instructions in order to get what I needed from the bot. It does, however, accomplish the 
- * task set out for it with a properly formatted fasta file and would be an excellent starting place for someone
- * looking to build this parsing tool. In my build I used ChatGPT to help me properly format my try/catch statements, 
- * to understand how to use the file writer/reader, and in formatting the tab delineated output file. 
+ * simpler syntax than I am yet able to in some places, I was still able to break it fairly easily and would have had to spend
+ * time adjusting my instructions in order to try to get what I needed from the bot. It does, however, accomplish the 
+ * task set out for it with a properly formatted fasta file and would be an excellent starting place for someone with
+ * familiarity with java looking to build this parsing tool. In my build I used ChatGPT to help me properly format my 
+ * try/catch statements, to understand how to use the file writer/reader, and in formatting the tab delineated output file. 
  */
