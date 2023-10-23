@@ -1,10 +1,9 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
-import java.time.Instant;
 import java.time.Duration;
+import java.time.Instant;
 
 public class AAQuiz {
     private static String[] letterCode = {"A", "R", "N", "D", "C", "Q", "E", "G", "H", "I",
@@ -23,57 +22,80 @@ public class AAQuiz {
     private JLabel scoreLabel;
 
     private int score = 0;
+    private int questionsAsked = 0;
     private Instant startTime;
     private Timer quizTimer;
+    private boolean answeringQuestion = false;
+    private ActionListener answerFieldListener;
 
     public AAQuiz() {
         frame = new JFrame("Amino Acid Quiz");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 200);
-        frame.setLayout(new GridLayout(5, 1));
+        frame.setSize(1000, 600);
+        frame.setLayout(new BorderLayout());
+
+        ImageIcon backgroundIcon = new ImageIcon("background.png");
+        JLabel imageLabel = new JLabel(backgroundIcon);
+        frame.add(imageLabel, BorderLayout.NORTH);
+
+        Font scientificFont = new Font("Serif", Font.PLAIN, 14);
+        Color mintGreen = new Color(183, 236, 191);
+        Color navy = new Color(0, 0, 128);
 
         questionLabel = new JLabel();
         answerField = new JTextField();
         startButton = new JButton("Start Quiz");
         cancelButton = new JButton("Cancel");
         timerLabel = new JLabel("Time Left: 30 seconds");
-        scoreLabel = new JLabel("Score: 0/20");
+        scoreLabel = new JLabel("Score: 0/0");
 
-        frame.add(questionLabel);
-        frame.add(answerField);
-        frame.add(startButton);
-        frame.add(cancelButton);
-        frame.add(timerLabel);
-        frame.add(scoreLabel);
+        questionLabel.setFont(scientificFont);
+        answerField.setFont(scientificFont);
+        answerField.setBackground(mintGreen);
+        answerField.setForeground(navy);
+        startButton.setFont(scientificFont);
+        startButton.setBackground(mintGreen);
+        startButton.setForeground(navy);
+        cancelButton.setFont(scientificFont);
+        cancelButton.setBackground(mintGreen);
+        cancelButton.setForeground(navy);
+        timerLabel.setFont(scientificFont);
+        scoreLabel.setFont(scientificFont);
 
-        startButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                startQuiz();
-            }
-        });
+        JPanel quizPanel = new JPanel();
+        quizPanel.setLayout(new GridLayout(4, 2));
 
-        cancelButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                endQuiz();
-            }
-        });
+        quizPanel.add(questionLabel);
+        quizPanel.add(answerField);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+        buttonPanel.add(startButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.add(timerLabel);
+        buttonPanel.add(scoreLabel);
+
+        frame.add(quizPanel, BorderLayout.CENTER);
+        frame.add(buttonPanel, BorderLayout.SOUTH);
+
+        startButton.addActionListener(e -> startQuiz());
+        cancelButton.addActionListener(e -> endQuiz());
+
+        answerFieldListener = e -> checkAnswer();
 
         frame.setVisible(true);
     }
 
     private void startQuiz() {
         score = 0;
-        startTime = Instant.now();
-        answerField.setText("");
+        questionsAsked = 0;
         answerField.setEditable(true);
         startButton.setEnabled(false);
         cancelButton.setEnabled(true);
-        scoreLabel.setText("Score: 0/20");
-        quizTimer = new Timer(1000, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                updateTimer();
-            }
-        });
+        updateScoreLabel();
+        startTime = Instant.now();
+        quizTimer = new Timer(1000, e -> updateTimer());
         quizTimer.start();
         nextQuestion();
     }
@@ -83,27 +105,31 @@ public class AAQuiz {
             int randomIndex = getRandomIndex();
             String aminoAcid = aminoAcids[randomIndex];
             questionLabel.setText("What is the one-letter code for the amino acid: " + aminoAcid + "?");
-
-            answerField.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    checkAnswer(randomIndex);
-                }
-            });
+            answerField.setText("");
+            answerField.removeActionListener(answerFieldListener);
+            answerField.addActionListener(answerFieldListener);
+            answeringQuestion = true;
         } else {
             endQuiz();
         }
+        questionsAsked++;
     }
 
-    private void checkAnswer(int randomIndex) {
-        String userInput = answerField.getText().trim().toUpperCase();
+    private void checkAnswer() {
+        if (answeringQuestion) {
+            answeringQuestion = false;
+            answerField.removeActionListener(answerFieldListener);
+            String userInput = answerField.getText().trim().toUpperCase();
+            int randomIndex = getRandomIndex();
+            String correctAnswer = letterCode[randomIndex];
 
-        if (userInput.equals(letterCode[randomIndex])) {
-            score++;
+            if (userInput.equals(correctAnswer)) {
+                score++;
+            }
+
+            updateScoreLabel();
+            nextQuestion();
         }
-
-        scoreLabel.setText("Score: " + score + "/20");
-        answerField.setText("");
-        nextQuestion();
     }
 
     private void updateTimer() {
@@ -119,7 +145,7 @@ public class AAQuiz {
         startButton.setEnabled(true);
         cancelButton.setEnabled(false);
         quizTimer.stop();
-        questionLabel.setText("Quiz ended. Your score: " + score + "/20");
+        questionLabel.setText("Great effort! Your score: " + score + "/" + questionsAsked);
     }
 
     private int getRandomIndex() {
@@ -127,11 +153,11 @@ public class AAQuiz {
         return random.nextInt(aminoAcids.length);
     }
 
+    private void updateScoreLabel() {
+        scoreLabel.setText("Score: " + score + "/" + questionsAsked);
+    }
+
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new AAQuiz();
-            }
-        });
+        SwingUtilities.invokeLater(() -> new AAQuiz());
     }
 }
