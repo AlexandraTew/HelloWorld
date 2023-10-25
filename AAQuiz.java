@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.Random;
 import java.time.Duration;
 import java.time.Instant;
@@ -21,12 +20,11 @@ public class AAQuiz {
     private JLabel timerLabel;
     private JLabel scoreLabel;
 
-    private int score = 0;
-    private int questionsAsked = 0;
+    private int correctResponses = 0;
+    private int incorrectResponses = 0;
     private Instant startTime;
     private Timer quizTimer;
-    private boolean answeringQuestion = false;
-    private ActionListener answerFieldListener;
+    private int answer = getRandomIndex();
 
     public AAQuiz() {
         frame = new JFrame("Amino Acid Quiz");
@@ -82,53 +80,31 @@ public class AAQuiz {
         startButton.addActionListener(e -> startQuiz());
         cancelButton.addActionListener(e -> endQuiz());
 
-        answerFieldListener = e -> checkAnswer();
-
         frame.setVisible(true);
     }
 
     private void startQuiz() {
-        score = 0;
-        questionsAsked = 0;
         answerField.setEditable(true);
         startButton.setEnabled(false);
         cancelButton.setEnabled(true);
+        answerField.addActionListener(e -> checkAnswer());
         updateScoreLabel();
         startTime = Instant.now();
         quizTimer = new Timer(1000, e -> updateTimer());
         quizTimer.start();
+
         nextQuestion();
     }
 
     private void nextQuestion() {
         if (Duration.between(startTime, Instant.now()).getSeconds() < 30) {
-            int randomIndex = getRandomIndex();
-            String aminoAcid = aminoAcids[randomIndex];
+            answer = getRandomIndex();
+            String aminoAcid = aminoAcids[answer];
             questionLabel.setText("What is the one-letter code for the amino acid: " + aminoAcid + "?");
             answerField.setText("");
-            answerField.removeActionListener(answerFieldListener);
-            answerField.addActionListener(answerFieldListener);
-            answeringQuestion = true;
+            answerField.requestFocus();
         } else {
             endQuiz();
-        }
-        questionsAsked++;
-    }
-
-    private void checkAnswer() {
-        if (answeringQuestion) {
-            answeringQuestion = false;
-            answerField.removeActionListener(answerFieldListener);
-            String userInput = answerField.getText().trim().toUpperCase();
-            int randomIndex = getRandomIndex();
-            String correctAnswer = letterCode[randomIndex];
-
-            if (userInput.equals(correctAnswer)) {
-                score++;
-            }
-
-            updateScoreLabel();
-            nextQuestion();
         }
     }
 
@@ -142,10 +118,11 @@ public class AAQuiz {
 
     private void endQuiz() {
         answerField.setEditable(false);
+        answerField.removeActionListener(answerField.getActionListeners()[0]);
         startButton.setEnabled(true);
         cancelButton.setEnabled(false);
         quizTimer.stop();
-        questionLabel.setText("Great effort! Your score: " + score + "/" + questionsAsked);
+        questionLabel.setText("Great effort! Your score: " + correctResponses + "/" + (correctResponses + incorrectResponses));
     }
 
     private int getRandomIndex() {
@@ -153,11 +130,28 @@ public class AAQuiz {
         return random.nextInt(aminoAcids.length);
     }
 
+    private boolean contentEquals(String userInput, String correctAnswer) {
+        return userInput.equalsIgnoreCase(correctAnswer);
+    }
+
     private void updateScoreLabel() {
-        scoreLabel.setText("Score: " + score + "/" + questionsAsked);
+        scoreLabel.setText("Score: " + correctResponses + "/" + (correctResponses + incorrectResponses));
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new AAQuiz());
+    }
+
+    private void checkAnswer() {
+        String userInput = answerField.getText().trim().toUpperCase();
+        String correctAnswer = letterCode[answer];
+
+        if (contentEquals(userInput, correctAnswer)) {
+            correctResponses++;
+        } else {
+            incorrectResponses++;
+        }
+        updateScoreLabel();
+        nextQuestion();
     }
 }
