@@ -12,7 +12,6 @@ public class DNAGenerator {
         double pA = 0.25;
         double pC = 0.25;
         double pG = 0.25;
-        double pT = 0.25;
 
         // Create a random number generator
         Random rand = new Random();
@@ -54,7 +53,6 @@ public class DNAGenerator {
         pA = 0.12;
         pC = 0.38;
         pG = 0.39;
-        pT = 0.11;
 
         // Reset the target count
         targetCount = 0;

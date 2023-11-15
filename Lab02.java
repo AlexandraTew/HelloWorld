@@ -30,6 +30,8 @@ public class Lab02 {
                 System.out.println("That's incorrect! The one letter code for " + aminoAcid + " is " + letterCode[randomIndex] + "\n");
                 break;
             }
+
+            scanner.close();
         }
 
         System.out.println("Your score: " + score + "/" + aminoAcids.length);

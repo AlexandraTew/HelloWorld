@@ -1,11 +1,11 @@
 import java.io.*;
 import java.util.*;
 
-public class GPTCode {
+public class GPTcode {
     private String header;
     private String sequence;
 
-    public GPTCode(String header, String sequence) {
+    public GPTcode(String header, String sequence) {
         this.header = header;
         this.sequence = sequence;
     }
@@ -31,8 +31,8 @@ public class GPTCode {
         return (float) gcCount / length;
     }
 
-    public static List<GPTCode> readFastaFile(String filepath) throws IOException {
-        List<GPTCode> sequences = new ArrayList<>();
+    public static List<GPTcode> readFastaFile(String filepath) throws IOException {
+        List<GPTcode> sequences = new ArrayList<>();
         String header = "";
         StringBuilder sequence = new StringBuilder();
 
@@ -43,7 +43,7 @@ public class GPTCode {
                     // Header line
                     if (!header.isEmpty()) {
                         // Create a new GPTCode object for the previous sequence
-                        sequences.add(new GPTCode(header, sequence.toString()));
+                        sequences.add(new GPTcode(header, sequence.toString()));
                         sequence.setLength(0); // Clear sequence buffer
                     }
                     header = line;
@@ -55,19 +55,19 @@ public class GPTCode {
 
             // Add the last sequence after the loop
             if (!header.isEmpty()) {
-                sequences.add(new GPTCode(header, sequence.toString()));
+                sequences.add(new GPTcode(header, sequence.toString()));
             }
         }
 
         return sequences;
     }
 
-    public static void writeTableSummary(List<GPTCode> list, File outputFile) throws IOException {
+    public static void writeTableSummary(List<GPTcode> list, File outputFile) throws IOException {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(outputFile))) {
             // Write the header row
             bw.write("sequenceID\tnumA\tnumC\tnumG\tnumT\tsequence\n");
 
-            for (GPTCode sequence : list) {
+            for (GPTcode sequence : list) {
                 String header = sequence.getHeader();
                 String seq = sequence.getSequence();
                 int numA = seq.replaceAll("[^A]", "").length();
@@ -83,7 +83,7 @@ public class GPTCode {
 
     public static void main(String[] args) {
         try {
-            List<GPTCode> sequences = readFastaFile("input.fasta");
+            List<GPTcode> sequences = readFastaFile("input.fasta");
             writeTableSummary(sequences, new File("output.txt"));
         } catch (IOException e) {
             e.printStackTrace();
