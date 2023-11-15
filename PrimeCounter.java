@@ -18,7 +18,7 @@ public class PrimeCounter extends JFrame {
 
     public PrimeCounter() {
         setTitle("Prime Finder");
-        setSize(500, 500);
+        setSize(600, 500);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         addWindowListener(new WindowAdapter() {
@@ -64,15 +64,6 @@ public class PrimeCounter extends JFrame {
                 if (model.getState() == SwingWorker.StateValue.DONE) {
                     startButton.setEnabled(true);
                     cancelButton.setEnabled(false);
-
-                    // Display the total time taken once the calculation is complete
-                    long totalTime = System.currentTimeMillis() - model.getStartTime();
-                    int totalPrimes = model.getCount();
-                    double primesPerMillisecond = (double) totalPrimes / totalTime;
-
-                    resultTextArea.append("Total primes found: " + totalPrimes + "\n");
-                    resultTextArea.append("Total time: " + totalTime + " milliseconds\n");
-                    resultTextArea.append("Primes per millisecond: " + primesPerMillisecond + "\n");
                 }
             }
         });
@@ -90,15 +81,6 @@ public class PrimeCounter extends JFrame {
         cancelButton.addActionListener(e -> {
             model.cancelCalculation();
             cancelButton.setEnabled(false);
-
-            // Display the number of primes found and the time taken if the user cancels
-            long totalTime = System.currentTimeMillis() - model.getStartTime();
-            int canceledPrimes = model.getCount();
-            double primesPerMillisecond = (double) canceledPrimes / totalTime;
-
-            resultTextArea.append("Primes found: " + canceledPrimes + "\n");
-            resultTextArea.append("Time taken: " + totalTime + " milliseconds\n");
-            resultTextArea.append("Primes per millisecond: " + primesPerMillisecond + "\n");
         });
     }
 
@@ -150,7 +132,7 @@ class PrimeFinderModel extends SwingWorker<Integer, Integer> {
             if (isPrime(i)) {
                 count.incrementAndGet();
                 long elapsedTime = System.currentTimeMillis() - startTime;
-                if (elapsedTime >= updateInterval) {
+                if (elapsedTime >= updateInterval || count.get() == primeLimit) {
                     publish(count.get());
                     startTime = System.currentTimeMillis();
                 }
@@ -169,7 +151,22 @@ class PrimeFinderModel extends SwingWorker<Integer, Integer> {
 
         for (int value : chunks) {
             resultTextArea.append("Primes found: " + value + "\n");
+
+            // Display additional information when 2 million primes are found
+            if (value >= 2000000) {
+                displayFinalResults();
+            }
         }
+    }
+
+    private void displayFinalResults() {
+        long totalTime = System.currentTimeMillis() - startTime;
+        int totalPrimes = count.get();
+        double primesPerMillisecond = (double) totalPrimes / totalTime;
+
+        resultTextArea.append("Total primes found: " + totalPrimes + "\n");
+        resultTextArea.append("Total time: " + totalTime + " milliseconds\n");
+        resultTextArea.append("Primes per millisecond: " + primesPerMillisecond + "\n");
     }
 
     public void startCalculation(int threadCount) {
@@ -208,3 +205,10 @@ class PrimeFinderModel extends SwingWorker<Integer, Integer> {
         return true;
     }
 }
+
+
+/* This one was a little tougher and I struggled with several issues to eventually end up with the code above.
+ * The current issue is the failure to track time correctly. I think I need the time to be tracked outside of the loop
+ * but wasn't quite sure how to make this happen in the time I had left before the assignmnet was due! Any hints or
+ * suggestions would be much appreciated! 
+ */
